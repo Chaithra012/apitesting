@@ -18,7 +18,53 @@
 								"exec": [
 									"pm.test(\"Successful POST request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+									"    \"$id\": \"http://example.com/example.json\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"title\": \"The root schema\",\r",
+									"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+									"    \"default\": {},\r",
+									"    \"examples\": [\r",
+									"        {\r",
+									"            \"token\": \"a51e46db96a4417\"\r",
+									"        }\r",
+									"    ],\r",
+									"    \"required\": [\r",
+									"        \"token\"\r",
+									"    ],\r",
+									"    \"properties\": {\r",
+									"        \"token\": {\r",
+									"            \"$id\": \"#/properties/token\",\r",
+									"            \"type\": \"string\",\r",
+									"            \"title\": \"The token schema\",\r",
+									"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+									"            \"default\": \"\",\r",
+									"            \"examples\": [\r",
+									"                \"a51e46db96a4417\"\r",
+									"            ]\r",
+									"        }\r",
+									"    },\r",
+									"    \"additionalProperties\": true\r",
+									"};\r",
+									"\r",
+									"pm.test('Schema Validation', function() {\r",
+									" \r",
+									"    var result=tv4.validateResult(pm.response.json(), schema);\r",
+									" \r",
+									"    if(!result.valid){\r",
+									"        console.log(result);\r",
+									"    }\r",
+									" \r",
+									"    pm.expect(result.valid).to.be.true;\r",
+									"})\r",
+									"\r",
+									"pm.environment.set('Create_Token_schema', JSON.stringify(schema));"
 								],
 								"type": "text/javascript"
 							}
@@ -841,7 +887,7 @@
 								"id": "e420aced-e0df-43a4-ab27-591dc548e4ad",
 								"exec": [
 									"pm.test(\"Body matches string\", function () {\r",
-									"    pm.expect(pm.response.text()).to.include(\"Chaithra\");\r",
+									"    pm.expect(pm.response.text()).to.include('[{\"firstname\": Chaithra}]');\r",
 									"});\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -910,7 +956,7 @@
 									"            \"type\": \"boolean\",\r",
 									"            \"title\": \"The depositpaid schema\",\r",
 									"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-									"            \"default\": false,\r",
+									"            \"default\": true,\r",
 									"            \"examples\": [\r",
 									"                true\r",
 									"            ]\r",
@@ -1608,7 +1654,7 @@
 								"id": "41df8fbb-2c2a-489b-957f-c096377631b3",
 								"exec": [
 									"pm.test(\"Body matches string\", function () {\r",
-									"    pm.expect(pm.response.text()).to.include(\"totalprice\");\r",
+									"    pm.expect(pm.response.text()).to.equals ('{\"firstname\":\"Praveen\",\"lastname\":\"Chaithra\",\"totalprice\":4000,\"depositpaid\":false,\"bookingdates\":{\"checkin\":\"2018-02-02\",\"checkout\":\"2019-02-02\"},\"additionalneeds\":\"Lunch\"}');\r",
 									"});\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1784,7 +1830,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\" : \"Chaithra\",\r\n    \"lastname\" : \"Praveen\",\r\n    \"totalprice\" : 2000,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2018-01-01\",\r\n        \"checkout\" : \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"raw": "{\r\n    \"firstname\" : \"Praveen\",\r\n    \"lastname\" : \"Chaithra\",\r\n    \"totalprice\" : 4000,\r\n    \"depositpaid\" : false,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2018-02-02\",\r\n        \"checkout\" : \"2019-02-02\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
 							"options": {
 								"raw": {}
 							}
@@ -2390,7 +2436,7 @@
 								"id": "1d578a71-6915-43e9-bcf8-165c9ffbc5b6",
 								"exec": [
 									"pm.test(\"Body matches string\", function () {\r",
-									"    pm.expect(pm.response.text()).to.include(\"totalprice\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
 									"});\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -2566,7 +2612,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\" : \"Praveen\",\r\n    \"lastname\" : \"Chaithra\",\r\n    \"totalprice\" : 4000,\r\n    \"depositpaid\" : false\r\n   \r\n}",
+							"raw": "{\r\n    \"totalprice\" : 6000,\r\n    \"depositpaid\" : true\r\n   \r\n}",
 							"options": {
 								"raw": {}
 							}
@@ -2592,7 +2638,7 @@
 			"name": "Delete_Booking",
 			"item": [
 				{
-					"name": "Auth - CreateToken Copy",
+					"name": "Auth - CreateToken",
 					"event": [
 						{
 							"listen": "test",
@@ -2637,7 +2683,7 @@
 					"response": []
 				},
 				{
-					"name": "GetBookingIds Copy",
+					"name": "GetBookingIds",
 					"event": [
 						{
 							"listen": "test",
@@ -2738,7 +2784,7 @@
 					"response": []
 				},
 				{
-					"name": "CreateBooking Copy",
+					"name": "CreateBooking",
 					"event": [
 						{
 							"listen": "test",
@@ -2975,7 +3021,7 @@
 					"response": []
 				},
 				{
-					"name": "GetBooking Copy",
+					"name": "GetBooking",
 					"event": [
 						{
 							"listen": "test",
